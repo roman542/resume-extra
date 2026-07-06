@@ -10,9 +10,9 @@ This will build and run the sample programs.
 
 [main.c](./main.c): The executor, mmaps a file provided and calls it.
 
-[bin.ld]('./bin.ld'): linker script that produces the executable in the required format.
+[bin.ld](./bin.ld): linker script that produces the executable in the required format.
 
-[crt.s]('./crt.s'): C runtime; must precede all other objects, a simple jmp to main.
+[crt.s](./crt.s): C runtime; must precede all other objects, a simple jmp to main.
 
 ## Assembly sample
 
