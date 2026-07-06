@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<style>
+		:root {
+			--r-heading-text-transform: none;
+		}
+		.reveal > .slides > section {
+			width: 1280px;
+			height: 720px;
+
+			&:not(.custom) > p {
+				margin: 0;
+				position: absolute;
+				width: 100%;
+			}
+			&:not(.custom) > div {
+				box-sizing: border-box;
+				position: absolute;
+				width: 100%;
+				height: calc(100% - var(--r-main-font-size) * 1.3 * 2);
+				margin: calc(var(--r-main-font-size) * 1.3) 0;
+			}
+		}
+
+		.presentation-title {
+			position: absolute;
+			display: flex;
+			height: 100%;
+			width: 100%;
+			flex-direction: column;
+			justify-content: center;
+
+			& h1, & p {
+				width: 100%;
+				height: fit-content;
+				text-align:center;
+			}
+		}
+
+		.author {
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		.side-by-side-container {
+			& > div {
+				height: 100%;
+				width: 100%;
+				margin:0;
+
+				overflow: hidden;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				grid-gap: 10px;
+				& > img {
+					align-self: center;
+					max-height: 100%;
+					max-width: 100%;
+					margin: 0;
+					aspect-ratio: 1/1;
+				}
+			}
+			& > img {
+				margin: 0;
+				height: auto;
+				width: auto;
+				max-height: 100%;
+				max-width: 100%;
+			}
+		}
+		.setup-two-panels-conclusion-container > div {
+			width: 100%;
+			height: 100%;
+		}
+		.setup-two-panels-conclusion-container > div > div {
+			height: 100%;
+			width: 100%;
+			display: grid;
+			grid-template:
+				"h h" min-content
+				"a b" 1fr 
+				"c c" min-content
+				/ 1fr 1fr;
+
+			& :nth-child(1) {
+				grid-area:h;
+			}
+			& :last-child {
+				grid-area: c;
+			}
+			& .text-left {
+				text-align: left;
+			}
+			& .flex-center {
+				display: flex;
+				flex-direction: column; 
+				align-items: center;
+				justify-content: center;
+			}
+			& .my-table {
+				border-radius: 10px;
+				overflow: hidden;
+				border: 1px solid white;
+				border-collapse: separate;
+
+				& td {
+					text-align: center;
+					vertical-align: middle;
+					border: 0;
+					border-right: 1px solid white;
+					border-top: 1px solid white;
+
+					&.top {
+						border-top: 0;
+					}
+					&.right {
+						border-right: 0;
+					}
+				}
+			}
+		}
+		span.tab {
+			white-space: pre;
+		}
+		.red {
+			color: red;
+		}
+		.bgred {
+			background-color: rgba(255, 0, 0, 0.5);
+		}
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+		<div class="slides">
+		<section class="custom">
+			<div class="presentation-title">
+				<h1>The CPU Does Not Care About Your Opinion</h1>
+			</div>
+			<div class="author">
+				<p>Roman Rotko</p>
+				<p>ПФ-21</p>
+			</div>
+		</section>
+		<section>
+			<p>Why?</p>
+			<div class="r-stack side-by-side-container">
+				<div class="fragment fade-out" data-fragment-index="0">
+					<img src="res/intel_8086.jpg">
+					<ul>
+						<li>Released in 1978</li>
+						<li>1 core</li>
+						<li>No cache</li>
+					</ul>
+				</div>
+				<div class="fragment current-visible" data-fragment-index="0">
+					<img src="res/intel_i9.jpg">
+					<ul>
+						<li>Released in 2022</li>
+						<li>8 fast & 16 slow cores</li>
+						<li>36 MB L3 cache</li>
+					</ul>
+				</div>
+				<div class="fragment current-visible">
+					<img src="res/amd_epyc_9965.jpg">
+					<ul>
+						<li>Released in 2024</li>
+						<li>195 cores</li>
+						<li>384 MB L3 cache</li>
+					</ul>
+				</div>
+				<div class="fragment current-visible">
+					<img src="res/asrock_turin.jpg">
+					<ul>
+						<li>Up to 4 TB of ram</li>
+					</ul>
+				</div>
+				<img class="fragment current-visible" src="res/4_socket.jpg">
+				<div class="fragment current-visible">
+					<img src="res/ibm_z17.png">
+					<ul>
+						<li>Released in 2024</li>
+						<li>Up to 208 CPUs</li>
+						<li>Up to 1664 cores</li>
+						<li>2.8 GB virtual L4 cache per 8 CPUs</li>
+						<li>Up to 64 TB of RAM</li>
+						<li>This is a SINGLE computer</li>
+					</ul>
+				</div>
+				<img class="fragment fade-in" src="res/ibm_z17_4.jpg">
+			</div>
+		</section>
+		<section class="prepare-transitions">
+			<p>Quiz</p>
+			<div class="r-stack setup-two-panels-conclusion-container">
+			<div>
+			<div>
+				<p>x = 0; y = 0</p>
+				<div class="flex-center">
+					<p class="text-left">
+						x = 1<br>
+						y = 1
+					</p>
+				</div>
+				<div class="flex-center">
+					<p class="text-left">
+						r1 = x<br>
+						r2 = y
+					</p>
+				</div>
+				<div class="flex-center">
+					<table class="my-table">
+						<tr>
+							<td>r1</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>r2</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>x</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>y</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</div>
+
+			<div>
+			<div>
+				<p>x = 0; y = 0</p>
+				<div class="flex-center">
+					<p class="text-left">
+						y = 1<br>
+						x = 1
+					</p>
+				</div>
+				<div class="flex-center">
+					<p class="text-left">
+						r1 = x<br>
+						r2 = y
+					</p>
+				</div>
+				<div class="flex-center">
+					<table class="my-table">
+						<tr>
+							<td>r1</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td class="red">1</td>
+						</tr>
+						<tr>
+							<td>r2</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1</td>
+							<td class="red">0</td>
+						</tr>
+						<tr>
+							<td>x</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">1</td>
+						</tr>
+						<tr>
+							<td>y</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">1</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</div>
+
+
+			<div>
+			<div>
+				<p>x = 0; y = 0</p>
+				<div class="flex-center">
+					<p class="text-left">
+						x = 1<br>
+						r1 = y
+					</p>
+				</div>
+				<div class="flex-center">
+					<p class="text-left">
+						y = 1<br>
+						r2 = x
+					</p>
+				</div>
+				<div class="flex-center">
+					<table class="my-table">
+						<tr>
+							<td>r1</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">0</td>
+						</tr>
+						<tr>
+							<td>r2</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1</td>
+							<td class="red">0</td>
+						</tr>
+						<tr>
+							<td>x</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">1</td>
+						</tr>
+						<tr>
+							<td>y</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">1</td>
+						</tr>
+
+					</table>
+				</div>
+			</div>
+			</div>
+
+			<div>
+			<div>
+				<p>ok = 0; x = 0; r2 = 0</p>
+				<div class="flex-center">
+					<p class="text-left">
+						r1 = ok<br>
+						if r1 == 1:<br>
+						<span class="tab">	</span>r2 = x
+					</p>
+				</div>
+				<div class="flex-center">
+					<p class="text-left">
+						x = 1<br>
+						ok = 1
+					</p>
+				</div>
+				<div class="flex-center">
+					<table class="my-table">
+						<tr>
+							<td>r1</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>r2</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>ok</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>x</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</div>
+			<div>
+			<div>
+				<p>x = 0; y = 0</p>
+				<div class="flex-center">
+					<p class="text-left">
+						x = 1<br>
+						r1 = x<br>
+						r2 = y
+					</p>
+				</div>
+				<div class="flex-center">
+					<p class="text-left">
+						y = 1<br>
+						r3 = y<br>
+						r4 = x
+					</p>
+				</div>
+				<div class="flex-center">
+					<table class="my-table">
+						<tr>
+							<td>r1</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red">0</td>
+							<td class="red"></td>
+						</tr>
+						<tr>
+							<td>r2</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+							<td>0</td>
+							<td class="red"></td>
+							<td class="red"></td>
+						</tr>
+						<tr>
+							<td>r3</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td class="red"></td>
+							<td class="red">0</td>
+						</tr>
+						<tr>
+							<td>r4</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td class="red"></td>
+							<td class="red"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			</div>
+			</div>
+			<script>
+				"use strict";
+				let fragment_index = 0
+
+				function* cols(table) {
+					const tbody = table.children[0]
+					for (let i = 0; i < tbody.children[0].children.length; i++) {
+						let ret = []
+						for (let j = 0; j < tbody.children.length; j++) {
+							ret.push(tbody.children[j].children[i])
+						}
+						yield ret
+					}
+				}
+				const quizes = Array.from(document.querySelector(".prepare-transitions").children[1].children)
+				let last_innerdiv = null
+				quizes.forEach((el, i) => {
+					const innerdiv = el.children[0]
+					last_innerdiv = innerdiv
+					if (i != 0) {
+						el.classList.add("fragment", "fade-in")
+						el.dataset.fragmentIndex = fragment_index
+
+						// Fade in appears with the fadeout of the previous one
+
+						fragment_index++
+					}
+					
+					const answerdiv = innerdiv.children[innerdiv.children.length - 1]
+					answerdiv.classList.add("fragment", "fade-in")
+					answerdiv.dataset.fragmentIndex = fragment_index
+
+					fragment_index++
+					
+					const table = answerdiv.children[0];
+					let last_cells = null;
+
+					cols(table).forEach((cells, j) => {
+						last_cells = cells
+						cells.forEach((c, k) => {
+							if (k == 0) {
+								c.classList.add("top")
+							}
+							if (j == 0) {
+								// The first column is title and is already revealed
+								return;
+							}
+							c.classList.add("fragment", "fade-in")
+							c.dataset.fragmentIndex = fragment_index
+						})
+						if (j == 0) {
+							return
+						}
+						fragment_index++
+					})
+					last_cells.forEach((c) => {
+						c.classList.add("right")
+					})
+
+					innerdiv.classList.add("fragment", "fade-out")
+					innerdiv.dataset.fragmentIndex = fragment_index
+					
+					// Do not increment here, because the next element must fade in
+					// with the same index as this one.
+					
+				})
+				// Make the last slide persist.
+				last_innerdiv.classList.remove("fragment", "fade-out")
+				delete last_innerdiv.dataset.fragmentIndex
+			</script>
+		</section>
+		<section class="custom">
+			<div class="presentation-title">
+				<p>We can, of course, control this behavior...</p>
+				<p></p>
+				<p class="fragment">...but not without surprises of its own!</p>
+				<p></p>
+				<p class="fragment">Also, we didn't explore cases of more than 2 threads.</p>
+				<p></p>
+				<p class="fragment">...and compiler optimizations.</p>
+			</div>
+		</section>
+		<section class="custom">
+			<div class="presentation-title">
+					<h1>Thank you!</h1>
+			</div>
+		</section>
+		</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				transition: "slide",
+				transitionSpeed: "fast",
+				progress: false,
+
+				width: 1280,
+				height: 720,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>

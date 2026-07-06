@@ -1,0 +1,154 @@
+[starting slide]
+
+Hello! My name is Roman and today I'm going to tell you about how CPU's don't care about your opinion.
+
+[next] 8086
+
+But first, why? 
+
+At the beginning, everything was rather simple, but even this chip already has simple prefetch.
+
+[next] core i9
+
+But technology advances, and eventually we have a combination of different cores on the same chip and cache, because memory isn't fast enough anymore.
+
+[next] amd epyc
+
+We can also have a ton of cores on the same chip.
+
+[next] 2 socket, amd
+
+We can also have several processors in the same computer.
+
+[next] 4 socket, intel
+
+Usually up to 4 cpus on a single motherboard.
+
+[next] IBM Z
+
+We also have mainframes. They have even more CPUs and cache.
+
+[next] IBM Z maxed out
+
+In maximum configuration, this thing is 2 meters tall and weighs about 3.5 tons.
+
+[next] quiz 1
+
+With that out of the way, I want to give you a quiz. At the top are the starting conditions, to the left and to the right are 2 threads executing in parallel. 
+
+[next] col 1 (title column)
+
+Your task is to predict all unique outcomes of execution of this program. I'll give you an example.
+
+[next] col 2
+
+Firstly, they may simply execute in order, with the left thread executing first and the second executing second. Thus, x and y are both set to 1 and r1 and r2 read those ones back. Or line 1 of the left thread may execute first, then line 1 of the right thread, then line 2 of the left thread, and finally line 2 of the right thread.
+
+[next] col 3
+
+They may execute in reverse order, thus zeros will be read, as per the starting condition, and then x and y are overwritten. Or overlap as before but in reverse order.
+
+[next] col 4
+
+Or line 1 of the left thread may execute first, then the entirety of the right thread, and finally line 2 of the left thread. Pretty simple.
+
+[next] quiz 2
+
+Now, a very similar case, but the lines of the left thread vere swapped. Let's try predicting again.
+
+[next]
+[next]
+[next]
+[next] col 4
+
+The first 3 results are pretty much exactly the same, with r1 and r2 swapped in the last but. But, you can see there's one more case.
+
+[next] col 5
+
+As we can see, it appears that we have written x before we written y, which is not what our program says! However, that's exactly what happened here, as CPUs do reorder some instructions. This can also be achieved by reordering the reads into r1 and r2 as well, or reordering both reads and writes, and it is all allowed.
+
+[next] quiz 3
+
+Here, each thread writes a variable and reads another. Let's see what happens there.
+
+[next]
+[next] col 1
+
+Here, left executes before right, ...
+
+[next] col 2
+
+... right before left.
+
+[next] col 3
+
+They were mixed here, and the final one...
+
+[next] col 4
+
+They both first read and then both written. Should be expected from the previous one.
+
+[next] quiz 4
+
+Now, we have conditinal sentences. As we know, if condition does not match, the code inside it won't be executed.
+
+[next]
+[next] col 2
+
+Like usual, left executed before right, ...
+
+[next] col 3
+
+.. or right before left
+
+[next] col 4
+
+... or mix.
+
+Or, maybe ok was written before x.
+
+But what if it didn't? What if x was indeed written before ok?
+
+This exact result can still happen. The left thread can read x before the condition was checked.
+
+This actually is not allowed on desktop computers, but is allowed on mobile phones.
+
+[next] quiz 5
+
+Here threads write a variable, read it and then read another. Let's see what happens.
+
+[next]
+[next] col 2
+
+As before, left before right, ...
+
+[next] col 3
+
+... or right before left, ...
+
+[next] col 4
+
+... or they can mix, ...
+
+[next] col 5
+
+... or they can mix with some instruction reordering, or ...
+
+[next]
+[next] col 7
+
+... we can read values of x and y before we wrote to them at all, thanks to instruction reordering!
+
+This is the best one by far. It means even if you never ever consider parallel programming, as for all of the previous examples which primarily happen only in parallel programs, it can still bite you.
+
+But don't worry, modern computers don't actually do that. DEC Alpha, the architecture this example is for, died off because of poor business decisions.
+
+[next] closing words
+
+-- read the contents of the slide
+
+[next]
+[next]
+[next] compiler optimizations
+
+[next] final slide
